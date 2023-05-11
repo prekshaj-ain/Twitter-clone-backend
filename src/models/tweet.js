@@ -1,6 +1,6 @@
 const { default: mongoose } = require("mongoose");
 
-const tweetSchema = new mongooose.Schema({
+const tweetSchema = new mongoose.Schema({
     content: {
         type: String,
         required: true,

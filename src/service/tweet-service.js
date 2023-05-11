@@ -10,8 +10,8 @@ class TweetService {
         try{
             const content = data.content;
             const hashtagRegex = /#[a-zA-Z0-9_]+/g;
-            let hashtags = content.hashtag(hashtagRegex);
-            hashtags = hashtags.map(tag => tag.substring().toLowerCase());
+            let hashtags = content.match(hashtagRegex);
+            hashtags = hashtags.map(tag => tag.substring(1).toLowerCase());
             const tweet = await this.tweetRepository.create(data);
             let alreadyPresentTags = await this.hashtagRepository.findByName(hashtags);
             let titleOfTags = alreadyPresentTags.map(tag => tag.title);
@@ -26,7 +26,7 @@ class TweetService {
             })
             return tweet;
         }catch(error){
-            console.log('Service layer error');
+            console.log(error);
             throw error;
         }
     }
