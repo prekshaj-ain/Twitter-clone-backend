@@ -31,6 +31,16 @@ class TweetRepository{
         }
     }
 
+    async getAll(offset, limit){
+        try{
+            const tweets = await Tweet.find().skip(offset).limit(limit);
+            return tweets;
+        }catch(error){
+            console.log('Repository layer error');
+            throw error;
+        }
+    }
+
     async destroy(id){
         try{
             await Tweet.findByIdAndRemove(id);
