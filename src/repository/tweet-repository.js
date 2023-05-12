@@ -1,50 +1,14 @@
 const Tweet = require("../models/tweet");
+const CrudRepository = require("./crud-repository");
 
-class TweetRepository{
-    async create(data){
-        try{
-            const tweet = await Tweet.create(data);
-            return tweet;
-        }catch(error){
-            console.log('Repository layer error');
-            throw error;
-        }
+class TweetRepository extends CrudRepository{
+    constructor(){
+        super(Tweet);
     }
-
-    async update(id, data){
-        try{
-            const tweet = await Tweet.findByIdAndUpdate(id,data, {new: true});
-            return tweet;
-        }catch(error){
-            console.log('Repository layer error');
-            throw error;
-        }
-    }
-
-    async get(id){
-        try{
-            const tweet = await Tweet.findById(id);
-            return tweet;
-        }catch(error){
-            console.log('Repository layer error');
-            throw error;
-        }
-    }
-
     async getAll(offset, limit){
         try{
             const tweets = await Tweet.find().skip(offset).limit(limit);
             return tweets;
-        }catch(error){
-            console.log('Repository layer error');
-            throw error;
-        }
-    }
-
-    async destroy(id){
-        try{
-            await Tweet.findByIdAndRemove(id);
-            return true;
         }catch(error){
             console.log('Repository layer error');
             throw error;
