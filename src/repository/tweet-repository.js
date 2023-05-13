@@ -14,5 +14,15 @@ class TweetRepository extends CrudRepository{
             throw error;
         }
     }
+
+    async get(id){
+        try{
+            const tweet = await Tewwt.findById(id).populate('likes');
+            return tweet;
+        }catch(error){
+            conosle.log('Repository layer error');
+            throw error;
+        }
+    }
 }
 module.exports = TweetRepository;
