@@ -43,4 +43,4 @@ class LikeService{
     }
 }
 
-moduke.exports = LikeService;
+module.exports = LikeService;
