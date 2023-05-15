@@ -1,16 +1,17 @@
-const { LikeRepository, TweetRepository } = require("../repository");
+const { LikeRepository, TweetRepository, CommentRepository } = require("../repository");
 
 class LikeService{
     constructor(){
         this.likeRepository = new LikeRepository();
         this.tweetRepository = new TweetRepository();
+        this.commentRepository = new CommentRepository();
     }
 
     async toggleLike(modelId, modelType, userId){
         if(modelType === 'Tweet'){
             var likeable = await this.tweetRepository.get(modelId);
         }else if(modelType === 'Comment'){
-
+            var likeable = await this.commentRepository.get(modelId);
         }else {
             throw new Error('Unknown mondel type');
         }
@@ -22,6 +23,7 @@ class LikeService{
         });
 
         if(exists){
+            console.log(exists);
             likeable.likes.pull(exists.id);
             await likeable.save();
             await this.likeRepository.destroy(exists.id);
