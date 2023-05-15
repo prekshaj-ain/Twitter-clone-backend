@@ -20,10 +20,10 @@ const commentSchema = new mongoose.Schema({
         refPath: 'onModel',
         required: true,
     },
-    comments: {
+    comments: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Comment'
-    }
+    }]
 },{timestamps : true})
 
 const Comment = mongoose.model('Comment', commentSchema);

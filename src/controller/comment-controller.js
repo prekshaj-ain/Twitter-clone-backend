@@ -1,3 +1,5 @@
+const CommentService = require("../service/comment-service");
+
 const commentService = new CommentService();
 
 const createComment = async (req,res)=>{
@@ -6,7 +8,7 @@ const createComment = async (req,res)=>{
         res.status(201).json({
             success: true,
             data: response,
-            message: 'successfullt created the comment',
+            message: 'successfully created the comment',
             error: {},
         })
     }catch(error){

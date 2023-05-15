@@ -17,10 +17,10 @@ class TweetRepository extends CrudRepository{
 
     async get(id){
         try{
-            const tweet = await Tewwt.findById(id).populate('likes');
+            const tweet = await Tweet.findById(id).populate('likes');
             return tweet;
         }catch(error){
-            conosle.log('Repository layer error');
+            console.log('Repository layer error');
             throw error;
         }
     }
