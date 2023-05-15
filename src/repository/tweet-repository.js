@@ -24,5 +24,20 @@ class TweetRepository extends CrudRepository{
             throw error;
         }
     }
+
+    async getWithComments(id){
+        try{
+            const tweet = await Tweet.findById(id).populate({
+                path: 'comments',
+                populate : {
+                    path : 'comments'
+                }
+            }).lean();
+            return tweet;
+        }catch(error){
+            console.log('Repository layer error');
+            throw error;
+        }
+    }
 }
 module.exports = TweetRepository;

@@ -21,6 +21,26 @@ const createTweet = async (req,res)=>{
     }
 }
 
+const getTweet = async (req,res)=>{
+    try{
+        const response = await tweetService.get(req.params.id);
+        return res.status(200).json({
+            success: true,
+            error: [],
+            data: response,
+            message: 'Successfully fetched the tweet'
+        })  
+    }catch(error){
+        return res.status(500).json({
+            success: false,
+            error: error,
+            data: [],
+            message: 'Something went wrong'
+        })
+    }
+}
+
 module.exports = {
-    createTweet
+    createTweet,
+    getTweet
 }
