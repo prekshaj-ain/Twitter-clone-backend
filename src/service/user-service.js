@@ -19,6 +19,15 @@ class UserService{
             throw err;
         }
     }
+    #createRefreshToken(user){
+        try{
+            const result = jwt.sign(user, JWT_SECRET, { expiresIn: '1y' });
+            return result;
+        }catch(err){
+            console.log('Something went wrong in refresh token creation');
+            throw err;
+        }
+    }
 
     #checkPassword(userInputPassword, encryptedPassword){
         try{
@@ -31,10 +40,28 @@ class UserService{
     async create(data){
         try{
             const user = await this.userRepository.create(data);
-            const newJWT = this.#createToken({email: user.email, id:user.id, name:user.name});
-            return newJWT;
+            const newJWT = this.#createToken({email: user.email, id:user.id});
+            const refreshJWT = this.#createRefreshToken({email: user.email, id:user.id});
+            return {accessToken: newJWT, refreshToken:refreshJWT};
         }catch(err){
             console.log('Something went wrong at service layer');
+            throw err;
+        }
+    }
+    async signin(email, password){
+        try{
+            const user = await this.userRepository.findBy({email});
+            if(!user){
+                throw "user not found";
+            }
+            const passwordMatch = this.#checkPassword(password,user.password);
+            if(!passwordMatch){
+                throw 'incorrect password';
+            }
+            const newJWT = this.#createToken({email: user.email, id:user.id});
+            const refreshJWT = this.#createRefreshToken({email: user.email, id:user.id});
+            return {accessToken: newJWT, refreshToken:refreshJWT};
+        }catch(err){
             throw err;
         }
     }
