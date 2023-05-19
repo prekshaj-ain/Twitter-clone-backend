@@ -11,15 +11,14 @@ const createTweet = async (req,res)=>{
                 return res.status(500).json({error: err});
             }
             console.log(req.file);
-            return res.status(200).json({msg: 'ok'})
         })
-        // const response = await tweetService.create(req.body);
-        // return res.status(201).json({
-        //     success: true,
-        //     error: {},
-        //     data: response,
-        //     message: 'Successfully created a tweet'
-        // })  
+        const response = await tweetService.create(req.body);
+        return res.status(201).json({
+            success: true,
+            error: {},
+            data: response,
+            message: 'Successfully created a tweet'
+        })  
     }catch(error){
         return res.status(500).json({
             success: false,
