@@ -1,3 +1,4 @@
+const { unstable_renderSubtreeIntoContainer } = require("react-dom");
 const UserService = require("../service/user-service");
 
 const userService = new UserService();
@@ -59,7 +60,31 @@ const signin = async (req, res) => {
   }
 };
 
+const handleRefresh = async (req, res) => {
+  try {
+    const cookies = req.cookies;
+    if (!cookies?.jwt) {
+      return res.status(401);
+    }
+    const response = await userService.handleRefresh(cookies.jwt);
+    return res.status(201).json({
+      data: response.accessToken,
+      success: true,
+      message: "successfully generated New Token",
+      error: {},
+    });
+  } catch (error) {
+    return res.status(500).json({
+      data: {},
+      success: false,
+      message: "Not able to generate Token",
+      error: error,
+    });
+  }
+};
+
 module.exports = {
   create,
   signin,
+  handleRefresh,
 };

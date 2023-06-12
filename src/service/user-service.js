@@ -2,7 +2,7 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 
 const UserRepository = require("../repository/user-repository");
-const { JWT_SECRET } = require("../config/serverConfig");
+const { JWT_SECRET, JWT_REFRESH_SECRET } = require("../config/serverConfig");
 
 class UserService {
   constructor() {
@@ -20,7 +20,7 @@ class UserService {
   }
   #createRefreshToken(user) {
     try {
-      const result = jwt.sign(user, JWT_SECRET, { expiresIn: "1d" });
+      const result = jwt.sign(user, JWT_REFRESH_SECRET, { expiresIn: "1d" });
       return result;
     } catch (err) {
       console.log("Something went wrong in refresh token creation");
@@ -36,6 +36,7 @@ class UserService {
       throw err;
     }
   }
+
   async create(data) {
     try {
       const user = await this.userRepository.create(data);
@@ -75,6 +76,22 @@ class UserService {
       await user.save();
 
       return { accessToken: newJWT, refreshToken: refreshJWT };
+    } catch (err) {
+      throw err;
+    }
+  }
+  async handleRefresh(refreshToken) {
+    const user = await this.userRepository.findBy({ refreshToken });
+    if (!user) {
+      throw "user not found";
+    }
+    try {
+      const data = jwt.verify(refreshToken, JWT_REFRESH_SECRET);
+      if (data.id != user.id) {
+        throw " not Authorized ";
+      }
+      const newJWT = this.#createToken({ email: user.email, id: user.id });
+      return { accessToken: newJWT };
     } catch (err) {
       throw err;
     }
