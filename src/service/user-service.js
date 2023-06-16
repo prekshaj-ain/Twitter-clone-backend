@@ -49,9 +49,8 @@ class UserService {
       user.refreshToken = refreshJWT;
       await user.save();
 
-      return { accessToken: newJWT, refreshToken: refreshJWT };
+      return { accessToken: newJWT, refreshToken: refreshJWT, userId: user.id };
     } catch (err) {
-      console.log(err);
       console.log("Something went wrong at service layer");
       throw err;
     }
@@ -75,7 +74,7 @@ class UserService {
       user.refreshToken = refreshJWT;
       await user.save();
 
-      return { accessToken: newJWT, refreshToken: refreshJWT };
+      return { accessToken: newJWT, refreshToken: refreshJWT, userId: user.id };
     } catch (err) {
       throw err;
     }
@@ -92,6 +91,22 @@ class UserService {
       }
       const newJWT = this.#createToken({ email: user.email, id: user.id });
       return { accessToken: newJWT };
+    } catch (err) {
+      throw err;
+    }
+  }
+
+  async logout(refreshToken, res) {
+    try {
+      const user = await this.userRepository.findBy({ refreshToken });
+      if (user) {
+        user.refreshToken = "";
+      }
+      res.clearCookies("jwt", {
+        httpOnly: true,
+        secure: true,
+        sameSite: "None",
+      });
     } catch (err) {
       throw err;
     }

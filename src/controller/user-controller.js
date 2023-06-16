@@ -11,14 +11,15 @@ const create = async (req, res) => {
       name: req.body.Name,
       username: req.body.Username,
     });
-    res.cookie("jwt", response.refreshToken, {
+    const { refreshToken, ...others } = response;
+    res.cookie("jwt", refreshToken, {
       httpOnly: true,
       secure: true,
       sameSite: "None",
       maxAge: 24 * 60 * 60 * 1000,
     });
     return res.status(201).json({
-      data: response.accessToken,
+      data: others,
       success: true,
       message: "User created successfully",
       error: {},
@@ -35,17 +36,18 @@ const create = async (req, res) => {
 const signin = async (req, res) => {
   try {
     const response = await userService.signin(
-      req.body.email,
-      req.body.password
+      req.body.Email,
+      req.body.Password
     );
-    res.cookie("jwt", response.refreshToken, {
+    const { refreshToken, ...others } = response;
+    res.cookie("jwt", refreshToken, {
       httpOnly: true,
       secure: true,
       sameSite: "None",
       maxAge: 24 * 60 * 60 * 1000,
     });
     return res.status(201).json({
-      data: response.accessToken,
+      data: others,
       success: true,
       message: "User logged in successfully",
       error: {},
@@ -78,6 +80,29 @@ const handleRefresh = async (req, res) => {
       data: {},
       success: false,
       message: "Not able to generate Token",
+      error: error,
+    });
+  }
+};
+
+const handleLogout = async (req, res) => {
+  try {
+    const cookies = req.cookies;
+    if (!cookies?.jwt) {
+      return res.status(204);
+    }
+    await userService.logout(cookies.jwt, res);
+    return res.status(204).json({
+      data: {},
+      success: true,
+      message: "successfully logout",
+      error: {},
+    });
+  } catch (error) {
+    return res.status(500).json({
+      data: {},
+      success: false,
+      message: "Not able to Logout",
       error: error,
     });
   }
