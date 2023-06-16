@@ -85,7 +85,7 @@ const handleRefresh = async (req, res) => {
   }
 };
 
-const handleLogout = async (req, res) => {
+const logout = async (req, res) => {
   try {
     const cookies = req.cookies;
     if (!cookies?.jwt) {
@@ -112,4 +112,5 @@ module.exports = {
   create,
   signin,
   handleRefresh,
+  logout,
 };

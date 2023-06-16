@@ -6,6 +6,7 @@ const {
   create,
   signin,
   handleRefresh,
+  logout,
 } = require("../../controller/user-controller");
 
 const router = express.Router();
@@ -20,5 +21,6 @@ router.post("/comments", createComment);
 router.post("/signup", create);
 router.post("/signin", signin);
 router.get("/refresh", handleRefresh);
+router.get("/logout", logout);
 
 module.exports = router;
