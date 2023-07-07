@@ -70,7 +70,7 @@ const handleRefresh = async (req, res) => {
     }
     const response = await userService.handleRefresh(cookies.jwt);
     return res.status(201).json({
-      data: response.accessToken,
+      data: response,
       success: true,
       message: "successfully generated New Token",
       error: {},
@@ -108,9 +108,29 @@ const logout = async (req, res) => {
   }
 };
 
+const getUserById = async (req, res) => {
+  try {
+    const user = await userService.get(req.params.id);
+    return res.status(200).json({
+      data: { user },
+      success: true,
+      message: "successfully fetched user",
+      error: {},
+    });
+  } catch (error) {
+    return res.status(500).json({
+      data: {},
+      success: false,
+      message: "Not able to fetch the user",
+      error: error,
+    });
+  }
+};
+
 module.exports = {
   create,
   signin,
   handleRefresh,
   logout,
+  getUserById,
 };

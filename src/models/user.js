@@ -22,6 +22,7 @@ const userSchema = new mongoose.Schema(
     },
     profilePicture: {
       type: String,
+      default: "",
     },
     coverPicture: {
       type: String,
@@ -35,12 +36,6 @@ const userSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
-
-userSchema.pre("save", function (next) {
-  const encryptedpassword = bcrypt.hashSync(this.password, 12);
-  this.password = encryptedpassword;
-  next();
-});
 
 const User = mongoose.model("User", userSchema);
 

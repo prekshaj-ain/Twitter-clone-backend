@@ -27,6 +27,15 @@ class UserService {
       throw err;
     }
   }
+  #hashPassword(password) {
+    try {
+      return bcrypt.hashSync(password, 12);
+      s;
+    } catch (err) {
+      console.log("something went wrong during hashing process");
+      throw err;
+    }
+  }
 
   #checkPassword(userInputPassword, encryptedPassword) {
     try {
@@ -39,7 +48,11 @@ class UserService {
 
   async create(data) {
     try {
-      const user = await this.userRepository.create(data);
+      const hashedPassword = this.#hashPassword(data.password);
+      const user = await this.userRepository.create({
+        ...data,
+        password: hashedPassword,
+      });
       const newJWT = this.#createToken({ email: user.email, id: user.id });
       const refreshJWT = this.#createRefreshToken({
         email: user.email,
@@ -50,6 +63,15 @@ class UserService {
       await user.save();
 
       return { accessToken: newJWT, refreshToken: refreshJWT, userId: user.id };
+    } catch (err) {
+      console.log("Something went wrong at service layer");
+      console.log(err);
+      throw err;
+    }
+  }
+
+  async updateUser(data) {
+    try {
     } catch (err) {
       console.log("Something went wrong at service layer");
       throw err;
@@ -90,7 +112,7 @@ class UserService {
         throw " not Authorized ";
       }
       const newJWT = this.#createToken({ email: user.email, id: user.id });
-      return { accessToken: newJWT };
+      return { accessToken: newJWT, userId: user.id };
     } catch (err) {
       throw err;
     }
@@ -102,11 +124,24 @@ class UserService {
       if (user) {
         user.refreshToken = "";
       }
-      res.clearCookies("jwt", {
+      res.clearCookie("jwt", {
         httpOnly: true,
         secure: true,
         sameSite: "None",
       });
+    } catch (err) {
+      throw err;
+    }
+  }
+
+  async get(id) {
+    try {
+      const user = await this.userRepository.get(id);
+      if (!user) {
+        throw "User not found";
+      }
+      const { password, refreshToken, ...userData } = user._doc;
+      return userData;
     } catch (err) {
       throw err;
     }

@@ -7,6 +7,7 @@ const {
   signin,
   handleRefresh,
   logout,
+  getUserById,
 } = require("../../controller/user-controller");
 
 const router = express.Router();
@@ -22,5 +23,6 @@ router.post("/signup", create);
 router.post("/signin", signin);
 router.get("/refresh", handleRefresh);
 router.get("/logout", logout);
+router.get("/users/:id", getUserById);
 
 module.exports = router;
