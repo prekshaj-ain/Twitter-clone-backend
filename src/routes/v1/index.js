@@ -1,5 +1,10 @@
 const express = require("express");
-const { createTweet, getTweet } = require("../../controller/tweet-controllers");
+const { imageUpload } = require("../../controller/imageUpload-controller");
+const {
+  createTweet,
+  getTweet,
+  getAllTweets,
+} = require("../../controller/tweet-controllers");
 const { toggleLike } = require("../../controller/like-controller");
 const { createComment } = require("../../controller/comment-controller");
 const {
@@ -11,8 +16,10 @@ const {
 } = require("../../controller/user-controller");
 
 const router = express.Router();
+router.post("/upload", imageUpload);
 
 router.post("/tweets", createTweet);
+router.get("/tweets", getAllTweets);
 router.get("/tweets/:id", getTweet);
 
 router.post("/likes/toggle", toggleLike);
