@@ -25,8 +25,8 @@ const createTweet = async (req, res) => {
 
 const getAllTweets = async (req, res) => {
   try {
-    const { offset, limit } = req.query;
-    const response = await tweetService.getAll(offset, limit);
+    const { page, limit } = req.query;
+    const response = await tweetService.getAll(page, limit);
     return res.status(200).json({
       success: true,
       error: {},

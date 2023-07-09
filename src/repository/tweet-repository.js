@@ -5,11 +5,11 @@ class TweetRepository extends CrudRepository {
   constructor() {
     super(Tweet);
   }
-  async getAll(offset, limit) {
+  async getAll(skip, limit) {
     try {
       const tweets = await Tweet.find()
         .populate("author", "-password -email -refreshToken")
-        .skip(offset)
+        .skip(skip)
         .limit(limit)
         .sort({ createdAt: -1 }); // recent first
       return tweets;
