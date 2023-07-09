@@ -1,4 +1,3 @@
-const { unstable_renderSubtreeIntoContainer } = require("react-dom");
 const UserService = require("../service/user-service");
 
 const userService = new UserService();

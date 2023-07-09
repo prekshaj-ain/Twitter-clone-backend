@@ -26,6 +26,7 @@ const userSchema = new mongoose.Schema(
     },
     coverPicture: {
       type: String,
+      default: "",
     },
     bio: {
       type: String,
