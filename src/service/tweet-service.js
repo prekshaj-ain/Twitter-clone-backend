@@ -11,6 +11,7 @@ class TweetService {
       const content = data.content;
       const hashtagRegex = /#[a-zA-Z0-9_]+/g;
       let hashtags = content.match(hashtagRegex);
+      const tweet = await this.tweetRepository.create(data);
       if (hashtags) {
         hashtags = hashtags.map((tag) => tag.substring(1).toLowerCase());
         let alreadyPresentTags = await this.hashtagRepository.findByName(
@@ -28,7 +29,6 @@ class TweetService {
         });
       }
 
-      const tweet = await this.tweetRepository.create(data);
       return tweet;
     } catch (error) {
       console.log(error);
@@ -36,9 +36,10 @@ class TweetService {
     }
   }
 
-  async getAll(offset, limit) {
+  async getAll(page, limit) {
     try {
-      const tweets = await this.tweetRepository.getAll(offset, limit);
+      const skip = (page - 1) * limit;
+      const tweets = await this.tweetRepository.getAll(skip, limit);
       return tweets;
     } catch (error) {
       console.log(error);
