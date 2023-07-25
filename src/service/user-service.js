@@ -146,6 +146,19 @@ class UserService {
       throw err;
     }
   }
+
+  async getByUsername(username) {
+    try {
+      const user = await this.userRepository.findBy(username);
+      if (!user) {
+        throw "User not found";
+      }
+      const { password, refreshToken, ...userData } = user._doc;
+      return userData;
+    } catch (err) {
+      throw err;
+    }
+  }
 }
 
 module.exports = UserService;

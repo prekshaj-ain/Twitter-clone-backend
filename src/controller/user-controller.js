@@ -65,7 +65,7 @@ const handleRefresh = async (req, res) => {
   try {
     const cookies = req.cookies;
     if (!cookies?.jwt) {
-      return res.status(401);
+      throw "Cookie does not exist";
     }
     const response = await userService.handleRefresh(cookies.jwt);
     return res.status(201).json({
@@ -126,10 +126,32 @@ const getUserById = async (req, res) => {
   }
 };
 
+const getByUsername = async (req, res) => {
+  try {
+    const user = await userService.getByUsername({
+      username: req.params.username,
+    });
+    return res.status(200).json({
+      data: { user },
+      success: true,
+      message: "successfully fetched user",
+      error: {},
+    });
+  } catch (error) {
+    return res.status(500).json({
+      data: {},
+      success: false,
+      message: "Not able to fetch the user",
+      error: error,
+    });
+  }
+};
+
 module.exports = {
   create,
   signin,
   handleRefresh,
   logout,
   getUserById,
+  getByUsername,
 };

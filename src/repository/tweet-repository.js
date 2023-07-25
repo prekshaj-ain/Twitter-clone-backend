@@ -9,6 +9,7 @@ class TweetRepository extends CrudRepository {
     try {
       const tweets = await Tweet.find()
         .populate("author", "-password -email -refreshToken")
+        .populate("likes")
         .skip(skip)
         .limit(limit)
         .sort({ createdAt: -1 }); // recent first
