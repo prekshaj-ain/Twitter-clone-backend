@@ -64,7 +64,8 @@ const getTweet = async (req, res) => {
 const getAllTweetByUser = async (req, res) => {
   try {
     const { page, limit } = req.query;
-    const response = await tweetService.getAll(page, limit);
+    const userId = req.params.id;
+    const response = await tweetService.getAllTweetByUser(page, limit, userId);
     return res.status(200).json({
       success: true,
       error: {},
@@ -85,4 +86,5 @@ module.exports = {
   createTweet,
   getTweet,
   getAllTweets,
+  getAllTweetByUser,
 };

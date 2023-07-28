@@ -4,6 +4,7 @@ const {
   createTweet,
   getTweet,
   getAllTweets,
+  getAllTweetByUser,
 } = require("../../controller/tweet-controllers");
 const { toggleLike } = require("../../controller/like-controller");
 const { createComment } = require("../../controller/comment-controller");
@@ -21,6 +22,7 @@ router.post("/upload", imageUpload);
 
 router.post("/tweets", createTweet);
 router.get("/tweets", getAllTweets);
+router.get("/tweets/user/:id", getAllTweetByUser);
 router.get("/tweets/:id", getTweet);
 
 router.post("/likes/toggle", toggleLike);
