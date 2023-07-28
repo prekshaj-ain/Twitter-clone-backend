@@ -47,6 +47,21 @@ class TweetService {
     }
   }
 
+  async getAllByUserId(page, limit, userId) {
+    try {
+      const skip = (page - 1) * limit;
+      const tweets = await this.tweetRepository.getAllByUser(
+        skip,
+        limit,
+        userId
+      );
+      return tweets;
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  }
+
   async destroy() {}
 
   async get(id) {

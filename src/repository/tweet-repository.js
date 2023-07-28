@@ -20,6 +20,23 @@ class TweetRepository extends CrudRepository {
     }
   }
 
+  async getAllByUser(skip,limit,userId){
+    try{
+      const tweets = await Tweet.find({ author : userId})
+        .populate("author", "-password -email -refreshToken")
+        .populate("likes")
+        .skip(skip)
+        .limit(limit)
+        .sort({ createdAt: -1 }); // recent first
+      return tweets;
+    }catch(error){
+      console.log("Repository layer error");
+      throw error;
+    }
+  }
+
+  
+
   async get(id) {
     try {
       const tweet = await Tweet.findById(id).populate("likes");
